@@ -1,0 +1,23 @@
+import { chromium } from 'playwright-core';
+const browser = await chromium.launch({ headless: true, executablePath: 'C:/Users/kaluclu/AppData/Local/ms-playwright/chromium-1223/chrome-win64/chrome.exe' });
+const ctx = await browser.newContext({ viewport: { width: 1700, height: 1100 } });
+await ctx.addInitScript(() => { try { localStorage.setItem('kangal.onboarded.v2', '1'); } catch {} });
+const page = await ctx.newPage();
+await page.goto('http://localhost:5173', { waitUntil: 'networkidle' });
+await page.waitForTimeout(3000);
+await page.evaluate(() => {
+  const b = Array.from(document.querySelectorAll('button')).find(x => /^\s*SHELL\s*$/.test(x.innerText.trim()));
+  if (b) b.click();
+});
+await page.waitForTimeout(3000);
+const t = await page.evaluate(() => document.body.innerText);
+console.log('TEXT SNIPPET:', t.slice(0, 2000));
+console.log('---');
+console.log('Has Pre-Flight:', /Pre-Flight/i.test(t));
+console.log('Has Pre Flight:', /Pre Flight/i.test(t));
+console.log('Has nmap:', /\bnmap\b/i.test(t));
+console.log('Has nuclei:', /\bnuclei\b/i.test(t));
+console.log('Has INSTALL GUIDE:', /INSTALL GUIDE/.test(t));
+console.log('Has LAUNCH SHELL:', /LAUNCH SHELL/.test(t));
+console.log('Has Pre-Flight Shell:', /Pre-Flight Shell/i.test(t));
+await browser.close();

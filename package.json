@@ -1,0 +1,12 @@
+{
+  "name": "kangal",
+  "version": "1.0.0",
+  "description": "Multi-stage threat intelligence & recon platform. Real asset graph, real findings, real cross-scan memory.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

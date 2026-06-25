@@ -1,0 +1,164 @@
+# ============ Python ============
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+.python-version
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Test / coverage
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+.mypy_cache/
+.ruff_cache/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# ============ Node / Frontend ============
+node_modules/
+.pnp/
+.pnp.js
+.yarn/cache
+.yarn/build-state.yml
+.yarn/install-state.gz
+
+# Build outputs
+dist/
+build/
+.next/
+.nuxt/
+out/
+*.tsbuildinfo
+.eslintcache
+
+# Vite
+.vite/
+
+# ============ Kangal-specific runtime data ============
+# SQLite dev databases
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+backend/kangal.db
+backend/.e2e-data/*.db
+
+# Backend cache & data
+backend/.cache/
+backend/.data/
+backend/.e2e-data/
+.e2e-data/
+
+# Temp test artifacts
+.tmp-*.png
+.tmp-*
+*.tmp-e2e-*
+*.e2e-final.png
+*.probe.png
+*.probe-memory.png
+
+# Stray Dockerfiles (we ship no Docker)
+Dockerfile*
+*.Dockerfile
+
+# Local E2E probes (kept for development only)
+tests/e2e/probe*.mjs
+
+# Logs
+*.log
+logs/
+backend/logs/
+*.pid
+
+# Scan outputs, intel cache, threat intel cache
+backend/intel/
+backend/scans/
+
+# OS junk
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# Editors
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+
+# Environment files (never commit secrets)
+.env
+.env.local
+.env.*.local
+.env.development
+.env.production
+.env.test
+
+# Coverage / test artifacts
+coverage/
+.nyc_output/
+*.lcov
+
+# Misc
+*.bak
+*.tmp
+*.orig
+*.rej
+*.pyd
+
+# Build artifacts
+*.whl
+*.tar.gz
+*.zip
+
+# Ngrok / tunnel state
+.ngrok/
+
+# OS-specific
+.AppleDouble
+.LSOverride
+icon?
+
+# Docker leftovers (we don't use docker anymore but keep safety net)
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# CI
+.github/workflows/*.local.yml
