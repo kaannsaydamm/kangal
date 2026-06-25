@@ -89,6 +89,11 @@ backend/.e2e-data/
 Dockerfile*
 *.Dockerfile
 
+# Internal planning / design docs (kept local, not for the public repo)
+OVERHAUL_PLAN.md
+PLAN*.md
+*_PLAN.md
+
 # Local E2E probes (kept for development only)
 tests/e2e/probe*.mjs
 
