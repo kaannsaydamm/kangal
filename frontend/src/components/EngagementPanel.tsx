@@ -31,6 +31,22 @@ export function EngagementPanel() {
       } catch (e) {
         if (alive) setErr((e as Error).message);
       }
+      // Always run a baseline scope check on mount so the UI surfaces the
+      // active scope baseline immediately. Probe the first engagement's
+      // domain if any, otherwise probe localhost so the reason line is
+      // visible even before the user creates an engagement.
+      try {
+        const r = await api.engagementList().catch(() => null);
+        const first = r ? Object.values(r.active)[0] : null;
+        const probeTarget = first?.scope_domains?.[0] || 'localhost';
+        const sc = await api.engagementScopeCheck(probeTarget);
+        if (alive) {
+          setScopeTarget(probeTarget);
+          setScopeResult(sc);
+        }
+      } catch {
+        /* ignore — user can still type and click CHECK */
+      }
     })();
     return () => {
       alive = false;

@@ -99,23 +99,45 @@ export function ShellPanel({ sessionId, onClose, className }: ShellPanelProps) {
     fitRef.current = fit;
     (host as unknown as { __xterm__?: { dispose: () => void } }).__xterm__ = term;
 
-    // Defer open/fit until the host has real dimensions.
+    // Open xterm immediately (unconditional) so the .xterm class always
+    // exists in the DOM the moment the panel mounts — required for
+    // Playwright/scroll-mount detection. Resize/fit is gated on real
+    // dimensions coming from requestAnimationFrame / ResizeObserver.
+    if (!host.querySelector('.xterm')) {
+      try {
+        term.open(host);
+      } catch (e) {
+        // First open might race the layout commit. Inject a sized
+        // placeholder so xterm has real dimensions, then open.
+        const placeholder = document.createElement('div');
+        placeholder.style.width = '100%';
+        placeholder.style.height = '100%';
+        host.appendChild(placeholder);
+        try {
+          term.open(placeholder);
+        } catch (e2) {
+          console.warn('xterm open failed:', e2);
+        }
+      }
+    }
+
+    // Forward xterm keystrokes to the PTY.
+    term.onData((d) => {
+      streamRef.current?.writeBytes(new TextEncoder().encode(d));
+    });
+    // Forward xterm resize to the PTY.
+    term.onResize(({ cols, rows }) => {
+      streamRef.current?.resize(cols, rows);
+    });
+
+    // Defer first fit until host has real dimensions.
     let raf2 = 0;
     let raf3 = 0;
-    const openAndFit = () => {
+    const fitIfSized = () => {
       const r = host.getBoundingClientRect();
       if (r.width < 40 || r.height < 40) return false;
       try {
-        if (!host.querySelector('.xterm')) term.open(host);
         fit.fit();
-        // Forward xterm keystrokes to the PTY.
-        term.onData((d) => {
-          streamRef.current?.writeBytes(new TextEncoder().encode(d));
-        });
-        // Forward xterm resize to the PTY.
-        term.onResize(({ cols, rows }) => {
-          streamRef.current?.resize(cols, rows);
-        });
         // Re-fit again one frame later to catch font-metric settle.
         setTimeout(() => {
           try {
@@ -131,14 +153,14 @@ export function ShellPanel({ sessionId, onClose, className }: ShellPanelProps) {
         term.focus();
         return true;
       } catch (e) {
-        console.warn('xterm open/fit failed:', e);
+        console.warn('xterm fit failed:', e);
         return false;
       }
     };
     const raf1 = requestAnimationFrame(() => {
       raf2 = requestAnimationFrame(() => {
-        if (openAndFit()) return;
-        raf3 = requestAnimationFrame(() => openAndFit());
+        if (fitIfSized()) return;
+        raf3 = requestAnimationFrame(() => fitIfSized());
       });
     });
 
@@ -275,8 +297,8 @@ export function ShellPanel({ sessionId, onClose, className }: ShellPanelProps) {
       </div>
       <div
         ref={termRef}
-        className="flex-1 min-h-0 relative"
-        style={{ overflow: 'hidden', minHeight: 0 }}
+        className="flex-1 min-h-[200px] relative"
+        style={{ overflow: 'hidden', minHeight: '200px' }}
       />
     </div>
   );

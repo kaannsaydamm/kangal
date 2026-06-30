@@ -10,7 +10,6 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
 lib64/
 parts/
 sdist/
@@ -19,6 +18,9 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+
+# NOTE: do NOT ignore `lib/` at the project root — Kangal has a TS `lib/`
+# under frontend/src/lib/ that's source code, not Python build output.
 
 # Virtual environments
 .venv/

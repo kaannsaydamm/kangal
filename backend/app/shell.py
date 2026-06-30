@@ -189,15 +189,18 @@ def create_session(cols: int = DEFAULT_COLS, rows: int = DEFAULT_ROWS) -> ShellS
     env = _build_env(cwd=cwd, home=home)
     argv = ["/bin/bash", "--login", "-i"]
 
-    # ptyprocess.spawn handles forkpty internally; this is the lowest
+    # ptyprocess.PtyProcess.spawn handles forkpty internally; this is the lowest
     # possible layer (no asyncio.create_subprocess_exec shim).
-    proc = ptyprocess.spawn(
+    # NOTE: preexec_fn=os.setsid used to put the child in its own process group,
+    # but some sandboxed environments (modern WSL2/Kali) raise EPERM in the
+    # preexec callback. ptyprocess already detaches the child from the parent
+    # shell cleanly, so we just skip setsid here.
+    proc = ptyprocess.PtyProcess.spawn(
         argv,
         cwd=cwd,
         env=env,
         dimensions=(rows, cols),
         echo=True,           # let the terminal handle echo (xterm does)
-        preexec_fn=os.setsid,
     )
 
     sid = uuid.uuid4().hex[:16]

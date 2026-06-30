@@ -200,7 +200,7 @@ function MemoryView({
       <div className="space-y-1">
         {results.length === 0 ? (
           <div className="text-gray-600 text-center py-4">
-            {query ? 'no matches' : 'enter a query and press search'}
+            {query ? 'no results yet — try a broader query' : 'enter a query and press search'}
           </div>
         ) : (
           results.map((r) => (

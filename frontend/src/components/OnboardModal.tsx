@@ -396,17 +396,18 @@ function StepDetect({
             </div>
           )}
 
-          <div className="flex items-center justify-between pt-2">
-            {backButton}
-            <button
-              onClick={onContinue}
-              className="text-xs font-mono px-4 py-2 rounded bg-primary text-black hover:opacity-90 font-bold tracking-wider"
-            >
-              CONTINUE
-            </button>
-          </div>
         </>
       )}
+
+      <div className="flex items-center justify-between pt-2">
+        {backButton}
+        <button
+          onClick={onContinue}
+          className="text-xs font-mono px-4 py-2 rounded bg-primary text-black hover:opacity-90 font-bold tracking-wider"
+        >
+          CONTINUE
+        </button>
+      </div>
     </div>
   );
 }
